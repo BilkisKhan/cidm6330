@@ -29,6 +29,7 @@ class CreateBookmarksTableCommand:
                 "date_added": "text not null",
             },
         )
+        return "Bookmark_Table_Created!"
 
 
 class AddBookmarkCommand:
@@ -87,7 +88,7 @@ class ImportGitHubStarsCommand:
 
     def execute(self, data):
         bookmarks_imported = 0
-
+        print(data)
         github_username = data["github_username"]
         next_page_of_results = f"https://api.github.com/users/{github_username}/starred"
         while next_page_of_results:
@@ -95,7 +96,8 @@ class ImportGitHubStarsCommand:
                 next_page_of_results,
                 headers={"Accept": "application/vnd.github.v3.star+json"},
             )
-            next_page_of_results = stars_response.links.get("next", {}).get("url")
+            next_page_of_results = stars_response.links.get(
+                "next", {}).get("url")
 
             for repo_info in stars_response.json():
                 repo = repo_info["repo"]
@@ -118,11 +120,11 @@ class ImportGitHubStarsCommand:
 
 class EditBookmarkCommand:
     def execute(self, data):
-        db.update(
-            "bookmarks",
-            {"id": data["id"]},
-            data["update"],
-        )
+        # db.update(
+        #     "bookmarks",
+        #     {"id": data["id"]},
+        #     data["update"],
+        # )
         return "Bookmark updated!"
 
 
